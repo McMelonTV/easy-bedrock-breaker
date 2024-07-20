@@ -15,7 +15,7 @@ public class ClientCommonNetworkHandlerMixin {
 
     @Inject(method = "sendPacket", at = @At("HEAD"), cancellable = true)
     private void delayPackets(Packet<?> packet, CallbackInfo ci) {
-        if (EasyBedrockBreaker.isDelayingPackets() && Arrays.stream(EasyBedrockBreaker.blockedPackets).anyMatch(c -> c.isInstance(packet))) {
+        if (EasyBedrockBreaker.isDelayingPackets && Arrays.stream(EasyBedrockBreaker.blockedPackets).anyMatch(c -> c.isInstance(packet))) {
             EasyBedrockBreaker.delayPacket(packet);
             ci.cancel();
         }

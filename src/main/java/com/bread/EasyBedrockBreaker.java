@@ -42,7 +42,7 @@ public class EasyBedrockBreaker implements ClientModInitializer {
 		});
 
 		HudRenderCallback.EVENT.register((drawContext, tickDelta) -> {
-            if (EasyBedrockBreaker.isDelayingPackets())
+            if (EasyBedrockBreaker.isDelayingPackets)
 				MinecraftClient.getInstance().textRenderer.draw("delaying packets", 4, drawContext.getScaledWindowHeight() - 4 - MinecraftClient.getInstance().textRenderer.fontHeight, 0xffffffff, true, drawContext.getMatrices().peek().getPositionMatrix(), drawContext.getVertexConsumers(), TextRenderer.TextLayerType.NORMAL, 0x00000000, 1);
         });
 
