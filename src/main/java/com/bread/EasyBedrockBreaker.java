@@ -24,7 +24,7 @@ public class EasyBedrockBreaker implements ClientModInitializer {
 
 	private static KeyBinding activateKey;
 
-	private static boolean isDelayingPackets = false;
+	public static boolean isDelayingPackets = false;
 
 	public static final Class[] blockedPackets = {
 			PlayerActionC2SPacket.class,
