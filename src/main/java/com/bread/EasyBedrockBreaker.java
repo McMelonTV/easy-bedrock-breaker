@@ -37,20 +37,23 @@ public class EasyBedrockBreaker implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		activateKey = KeyBindingHelper.registerKeyBinding(new KeyBinding("key.bread.delayBlockPackets", InputUtil.Type.KEYSYM, InputUtil.UNKNOWN_KEY.getCode(), "category.bread.breadclient"));
-		ClientTickEvents.START_CLIENT_TICK.register(client -> {
-			if (!activateKey.isPressed()) releasePackets();
-		});
+
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            while (activateKey.wasPressed()) {
+                toggleDelayingPackets();
+            }
+        });
+
+        ClientTickEvents.START_CLIENT_TICK.register(client -> {
+            if (!isDelayingPackets) {
+                releasePackets();
+            }
+        });
 
 		HudRenderCallback.EVENT.register((drawContext, tickDelta) -> {
             if (EasyBedrockBreaker.isDelayingPackets)
 				MinecraftClient.getInstance().textRenderer.draw("delaying packets", 4, drawContext.getScaledWindowHeight() - 4 - MinecraftClient.getInstance().textRenderer.fontHeight, 0xffffffff, true, drawContext.getMatrices().peek().getPositionMatrix(), drawContext.getVertexConsumers(), TextRenderer.TextLayerType.NORMAL, 0x00000000, 1);
         });
-
-		ClientTickEvents.END_CLIENT_TICK.register(client -> {
-			if (activateKey.wasPressed()) {
-				EasyBedrockBreaker.toggleDelayingPackets();
-			}
-		});
 
 		LOGGER.info("easy bedrock breaker initialized");
 	}
