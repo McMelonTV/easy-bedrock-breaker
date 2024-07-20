@@ -24,6 +24,8 @@ public class EasyBedrockBreaker implements ClientModInitializer {
 
 	private static KeyBinding activateKey;
 
+	private static boolean isDelayingPackets = false;
+
 	public static final Class[] blockedPackets = {
 			PlayerActionC2SPacket.class,
 			PlayerInputC2SPacket.class,
@@ -44,11 +46,17 @@ public class EasyBedrockBreaker implements ClientModInitializer {
 				MinecraftClient.getInstance().textRenderer.draw("delaying packets", 4, drawContext.getScaledWindowHeight() - 4 - MinecraftClient.getInstance().textRenderer.fontHeight, 0xffffffff, true, drawContext.getMatrices().peek().getPositionMatrix(), drawContext.getVertexConsumers(), TextRenderer.TextLayerType.NORMAL, 0x00000000, 1);
         });
 
+		ClientTickEvents.END_CLIENT_TICK.register(client -> {
+			if (activateKey.wasPressed()) {
+				EasyBedrockBreaker.toggleDelayingPackets();
+			}
+		});
+
 		LOGGER.info("easy bedrock breaker initialized");
 	}
 
-	public static boolean isDelayingPackets() {
-		return activateKey.isPressed();
+	public static void toggleDelayingPackets() {
+		isDelayingPackets = !isDelayingPackets;
 	}
 
 	public static void delayPacket(Packet<?> p) {
